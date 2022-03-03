@@ -19,14 +19,14 @@ setup(
         'Development Status :: 1 - Planning', # Chose either "3 - Alpha", "4 - Beta" or "5 - Production/Stable" as the current state of your package
         'Intended Audience :: Science/Research :: Software Development :: Build Tools', # Define that your audience are developers
         'License :: OSI Approved :: BSD License :: MIT License',  
-        'Operating System :: POSIX :: Linux :: Windows :: Mac :: Unix',        
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
+        'Operating System :: POSIX :: Linux :: Windows :: Mac :: Unix',     
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.7',   
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 )    
 

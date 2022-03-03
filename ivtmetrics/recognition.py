@@ -11,7 +11,7 @@ import numpy as np
 from sklearn.metrics import average_precision_score
 import warnings
 import sys
-import Disentangle
+from ivtmetrics.disentangle import Disentangle
 
 #%%%%%%%%%% RECOGNITION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class Recognition(Disentangle):
@@ -114,7 +114,7 @@ class Recognition(Disentangle):
             warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
             classwise = average_precision_score(targets, predicts, average=None)
             mean      = np.nanmean(classwise)
-        return classwise, mean
+        return {"AP":classwise, "mAP":mean}
     
     def compute_global_AP(self, component="ivt"):
         """
@@ -146,7 +146,7 @@ class Recognition(Disentangle):
             warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
             classwise = average_precision_score(targets, predicts, average=None)
             mean      = np.nanmean(classwise)
-        return classwise, mean    
+        return {"AP":classwise, "mAP":mean}    
     
     def compute_video_AP(self, component="ivt"):
         """
@@ -181,7 +181,7 @@ class Recognition(Disentangle):
         video_log = np.concatenate(video_log, axis=0)         
         videowise = np.nanmean(video_log, axis=0)
         mean      = np.nanmean(videowise)
-        return classwise, mean      
+        return {"AP":classwise, "mAP":mean}
 
     ##%%%%%%%%%%%%%%%%%%% TOP OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     

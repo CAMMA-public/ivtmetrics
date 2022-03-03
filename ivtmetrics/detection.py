@@ -9,7 +9,7 @@ icube, unistra
 #%%%%%%%% imports %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 import numpy as np
 import sys
-import Recognition
+from ivtmetrics.recognition import Recognition
 
 #%%%%%%%%%% RECOGNITION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 class Detection(Recognition):
@@ -59,11 +59,16 @@ class Detection(Recognition):
         self.classwise_prec = []
         self.accumulator    = {}
         self.video_count    = 0
+        self.end_call       = False
         self.reset()        
                 
     def reset(self):
         self.video_count = 0
-        self.video_end()        
+        self.video_end()  
+        
+    def reset_global(self):
+        self.video_count = 0
+        self.video_end()    
         
     def video_end(self):
         self.video_count += 1
@@ -114,6 +119,12 @@ class Detection(Recognition):
         assert isinstance(x[0], list), "Each frame must be a list of lists, each list a prediction of triplet and object locations"
         x = np.stack(x, axis=0)
         x = x[x[:,2].argsort()[::-1]]
+        return x    
+    
+    def sortstack(self, x):
+        #x format for a single frame: list(list): each list = [tripletID, toolID, toolProbs, x, y, w, h] bbox is scaled (0..1)
+        assert isinstance(x, np.ndarray), "Each frame must be an n-dim array with each row a unique prediction of triplet and object locations"
+        x = x[x[:,2].argsort()[::-1]]
         return x
         
     def dict2stack(self, x):
@@ -125,9 +136,20 @@ class Detection(Recognition):
             p = [d['triplet']]
             p.extend(d["instrument"])
             y.append(p)
-        return self.list2stack(y)
+#        y = np.stack(y, axis=0)
+        return self.list2stack(y)    
     
-    def update(self, targets, predictions, format="list"):
+    def update(self, targets, predictions, format="list"): 
+        [self.update_frame(y, f, format) for y,f in zip(targets, predictions)]
+#        print("First")
+#        formats = [format]* len(targets)
+#        map(self.update_frame, targets, predictions, formats)  
+#        for item in range(len(targets)):
+#            self.update_frame(targets[item], predictions[item], format)
+        self.end_call = False 
+    
+    def update_frame(self, targets, predictions, format="list"):
+#        print(self.end_call, "THIS GUY >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         if format=="list":            
             detection_gt    = self.list2stack(targets)
             detection_pd    = self.list2stack(predictions)
@@ -141,7 +163,7 @@ class Detection(Recognition):
         detection_gt_i = detection_gt.copy()
         detection_pd_i = detection_pd.copy()
         # for triplet
-        for gt in detection_gt:   
+        for gt in detection_gt: 
             self.accumulator[self.video_count]["npos"][int(gt[0])] += 1
         for det_pd in detection_pd:
             self.accumulator[self.video_count]["ndet"][int(det_pd[0])] += 1
@@ -176,7 +198,7 @@ class Detection(Recognition):
                 self.accumulator[self.video_count]["hits_i"][int(det_pd[1])].append(1.0)
             else:
                 self.accumulator[self.video_count]["hits_i"][int(det_pd[1])].append(0.0)  
-        self.end_call = False
+        
                         
     def compute(self, component="ivt", video_id=None):
         classwise_ap    = []
