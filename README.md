@@ -33,7 +33,7 @@ coming soon ...
 ## Metrics
 
 The metrics have been aligned with what is reported by [CholecT50](https://arxiv.org/abs/2109.03223) benchmark.
-**ivtmetrics** ivtmetrics can be imported in the following way: 
+**ivtmetrics** can be imported in the following way: 
 
 ```python
 import ivtmetrics
@@ -41,7 +41,7 @@ import ivtmetrics
 ```
 
 The metrics implement both **recognition** and **detection** evaluation.
-The metrics internally implement a disentangle function to help filter the triplet components as well as triplet different levels af association.
+The metrics internally implement a disentangle function to help filter the triplet components as well as triplet different levels of association.
 
 ### Recognition Metrics
 
@@ -72,43 +72,46 @@ topClass(k, component)|Obtain top K recognized classes on action triplet recogni
 #### Example usage
 
 ```python
-metric = ivtmetrics.Recognition(num_class=100)
+recognize = ivtmetrics.Recognition(num_class=100)
 
 network = MyModel(...) # your model here
 
 # training
 for epoch in number of epochs:
-  images, labels = dataloader(...) # your data loader
-  predictions = network(image)
-  metric.update(labels, predictions)
+  recognize.reset()
+  for images, labels in dataloader(...): # your data loader
+      predictions = network(image)
+      recognize.update(labels, predictions)
   
-results_i = metrics.compute_AP('i')
-print("instrument per class AP", results_i["AP"])
-print("instrument mean AP", results_i["mAP"])
-
-results_ivt = metrics.compute_AP('ivt')
-print("triplet mean AP", results_ivt["mAP"])
+  results_i = recognize.compute_AP('i')
+  print("instrument per class AP", results_i["AP"])
+  print("instrument mean AP", results_i["mAP"])
+    
+  results_ivt = recognize.compute_AP('ivt')
+  print("triplet mean AP", results_ivt["mAP"])
+    
 
 
 # evaluation
+recognize.reset_global()
 for video in videos:
   for images, labels in dataloader(video, ..): # your data loader
     predictions = network(image)
-    metric.update(labels, predictions)
+    recognize.update(labels, predictions)
   video_end()
     
-results_i = metrics.compute_video_AP('i')
+results_i = recognize.compute_video_AP('i')
 print("instrument per class AP", results_i["AP"])
 print("instrument mean AP", results_i["mAP"])
 
-results_it = metrics.compute_video_AP('it')
+results_it = recognize.compute_video_AP('it')
 print("instrument-target mean AP", results_it["mAP"])
 
-results_ivt = metrics.compute_video_AP('ivt')
+results_ivt = recognize.compute_video_AP('ivt')
 print("triplet mean AP", results_ivt["mAP"])
 ```
 
-
+`nan` values are possible when there is no instance of a particular class.
 
 
 
@@ -142,24 +145,25 @@ compute_global_AP(component)|compute frame-wise AP performance for all seen samp
 #### Example usage
 
 ```python
-metric = ivtmetrics.Detection(num_class=100)
+detect = ivtmetrics.Detection(num_class=100)
 
 network = MyModel(...) # your model here
 
 # training
 format = "list"
 for epoch in number of epochs:
-  images, labels = dataloader(...) # your data loader
-  predictions = network(image)
-  labels, predictions = formatYourLabels(labels, predictions)
-  metric.update(labels, predictions, format=format)
-  
-results_i = metrics.compute_AP('i')
-print("instrument per class AP", results_i["AP"])
-print("instrument mean AP", results_i["mAP"])
-
-results_ivt = metrics.compute_AP('ivt')
-print("triplet mean AP", results_ivt["mAP"])
+  for images, labels in dataloader(...): # your data loader
+    predictions = network(image)
+    labels, predictions = formatYourLabels(labels, predictions)
+    detect.update(labels, predictions, format=format)
+      
+  results_i = detect.compute_AP('i')
+  print("instrument per class AP", results_i["AP"])
+  print("instrument mean AP", results_i["mAP"])
+    
+  results_ivt = detect.compute_AP('ivt')
+  print("triplet mean AP", results_ivt["mAP"])
+  detect.reset()
 
 
 # evaluation
@@ -171,11 +175,15 @@ for video in videos:
     metric.update(labels, predictions, format=format)
   video_end()
     
-results_ivt = metrics.compute_video_AP('ivt')
+results_ivt = detect.compute_video_AP('ivt')
 print("triplet mean AP", results_ivt["mAP"])
 print("triplet mean recall", results_ivt["mRec"])
 print("triplet mean precision", results_ivt["mPre"])
 ```
+
+`nan` values are possible if there is no instance of a particular class.
+
+
 
 
 <a name="Docker"></a>
@@ -201,6 +209,9 @@ If you use this metrics in your project or research, please consider citing the 
 <a name="References"></a>
 ### References
 1. Nwoye, C. I., Yu, T., Gonzalez, C., Seeliger, B., Mascagni, P., Mutter, D., ... & Padoy, N. (2021). Rendezvous: Attention Mechanisms for the Recognition of Surgical Action Triplets in Endoscopic Videos. arXiv preprint arXiv:2109.03223.
+2. Nwoye, C. I., Gonzalez, C., Yu, T., Mascagni, P., Mutter, D., Marescaux, J., & Padoy, N. (2020, October). Recognition of instrument-tissue interactions in endoscopic videos via action triplets. In International Conference on Medical Image Computing and Computer-Assisted Intervention (pp. 364-374). Springer, Cham.
+3. https://cholectriplet2021.grand-challenge.org
+4. http://camma.u-strasbg.fr/datasets
 
 
 
