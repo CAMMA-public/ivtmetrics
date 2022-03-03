@@ -1,6 +1,6 @@
 
 
-[![PyPI version](https://badge.fury.io/py/motmetrics.svg)](https://badge.fury.io/py/ivtmetrics)
+[![PyPI version](https://badge.fury.io/py/motmetrics.svg)](https://pypi.org/project/ivtmetrics/0.0.1/)
 
 # ivtmetrics
 
