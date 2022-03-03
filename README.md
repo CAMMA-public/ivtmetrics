@@ -61,7 +61,7 @@ video_end()|Call to make the end of one video sequence.
 reset()|Reset current records. Useful during training and can be called at the begining of each epoch to avoid overlapping epoch performances.
 reset_global()|Reset all records. Useful for switching between training/validation/testing or can be called at the begining of new experiment.
 compute_AP(component)|Obtain the average precision on the fly. This gives the AP only on examples cases after the last `reset()` call. Useful for epoch performance during training. <ul><li>args `component` can be any of the following ('i', 'v', 't', 'iv', 'it','ivt') to compute performance for (instrument, verb, target, instrument-verb, instrument-target, instrument-verb-target) respectively. default is 'ivt' for triplets.</li> <li>the output is a `dict` with keys("AP", "mAP") for per-class and mean AP respectively.</li></ul>
-compute_video_AP(component)|compute video-wise AP performance as used in CholecT50 benchmarks.
+compute_video_AP(component)|(RECOMMENDED) compute video-wise AP performance as used in CholecT50 benchmarks.
 compute_global_AP(component)|compute frame-wise AP performance for all seen samples.
 topK(k, component) | Obtain top K performance on action triplet recognition for all seen examples. args `k` can be any int between 1-99. k = [5,10,15,20] have been used in benchmark papers.
 topClass(k, component)|Obtain top K recognized classes on action triplet recognition for all seen examples. args `k` can be any int between 1-99. k = 10 have been used in benchmark papers.
@@ -72,6 +72,7 @@ topClass(k, component)|Obtain top K recognized classes on action triplet recogni
 #### Example usage
 
 ```python
+import ivtmetrics
 recognize = ivtmetrics.Recognition(num_class=100)
 
 network = MyModel(...) # your model here
@@ -98,7 +99,7 @@ for video in videos:
   for images, labels in dataloader(video, ..): # your data loader
     predictions = network(image)
     recognize.update(labels, predictions)
-  video_end()
+  recognize.video_end()
     
 results_i = recognize.compute_video_AP('i')
 print("instrument per class AP", results_i["AP"])
@@ -111,7 +112,7 @@ results_ivt = recognize.compute_video_AP('ivt')
 print("triplet mean AP", results_ivt["mAP"])
 ```
 
-`nan` values are possible when there is no instance of a particular class.
+Any `nan` value in results is for classes with no occurrence in the data sample.
 
 
 
@@ -135,7 +136,7 @@ video_end()|Call to make the end of one video sequence.
 reset()|Reset current records. Useful during training and can be called at the begining of each epoch to avoid overlapping epoch performances.
 reset_global()|Reset all records. Useful for switching between training/validation/testing or can be called at the begining of new experiment.
 compute_AP(component)|Obtain the average precision on the fly. This gives the AP only on examples cases after the last `reset()` call. Useful for epoch performance during training.<ul><li>args `component` can be any of the following ('i', 'v', 't', 'iv', 'it','ivt') to compute performance for (instrument, verb, target, instrument-verb, instrument-target, instrument-verb-target) respectively.</li> <li>default is 'ivt' for triplets.</li><li> the output is a `dict` with keys("AP", "mAP", "Rec", "mRec", "Pre", "mPre") for per-class AP, mean AP, per-class Recall, mean Recall, per-class Precision and mean Precision respectively.</li></ui>
-compute_video_AP(component)|compute video-wise AP performance as used in CholecT50 benchmarks.
+compute_video_AP(component)|(RECOMMENDED) compute video-wise AP performance as used in CholecT50 benchmarks.
 compute_global_AP(component)|compute frame-wise AP performance for all seen samples.
 
 
@@ -145,6 +146,7 @@ compute_global_AP(component)|compute frame-wise AP performance for all seen samp
 #### Example usage
 
 ```python
+import ivtmetrics
 detect = ivtmetrics.Detection(num_class=100)
 
 network = MyModel(...) # your model here
@@ -172,8 +174,8 @@ for video in videos:
   for images, labels in dataloader(video, ..): # your data loader
     predictions = network(image)
     labels, predictions = formatYourLabels(labels, predictions)
-    metric.update(labels, predictions, format=format)
-  video_end()
+    detect.update(labels, predictions, format=format)
+  detect.video_end()
     
 results_ivt = detect.compute_video_AP('ivt')
 print("triplet mean AP", results_ivt["mAP"])
@@ -181,7 +183,7 @@ print("triplet mean recall", results_ivt["mRec"])
 print("triplet mean precision", results_ivt["mPre"])
 ```
 
-`nan` values are possible if there is no instance of a particular class.
+Any `nan` value in results is for classes with no occurrence in the data sample.
 
 
 
