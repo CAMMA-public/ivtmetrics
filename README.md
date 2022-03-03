@@ -183,6 +183,19 @@ print("triplet mean precision", results_ivt["mPre"])
 coming soon ..
 
 
+<a name="Citation"></a>
+# Citation
+If you use this metrics in your project or research, please consider citing the associated publication:
+```
+@article{nwoye2021rendezvous,
+  title={Rendezvous: Attention Mechanisms for the Recognition of Surgical Action Triplets in Endoscopic Videos},
+  author={Nwoye, Chinedu Innocent and Yu, Tong and Gonzalez, Cristians and Seeliger, Barbara and Mascagni, Pietro and Mutter, Didier and Marescaux, Jacques and Padoy, Nicolas},
+  journal={arXiv preprint arXiv:2109.03223},
+  year={2021}
+}
+```
+
+
 
 
 <a name="References"></a>
