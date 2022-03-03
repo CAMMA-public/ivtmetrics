@@ -8,8 +8,8 @@ setup(
     author_email='nwoye@unistra.fr',    
     description='A Python evaluation metrics package for action triplet recognition',
     keywords = ['triplet', 'average precision', 'AP'], 
-    url='https://github.com/CAMMA-public/rendezvous',
-    download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+    url='https://github.com/CAMMA-public/ivtmetrics',
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.1.tar.gz',    # I explain this later on
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     install_requires=['scikit-learn',
                       'numpy',
