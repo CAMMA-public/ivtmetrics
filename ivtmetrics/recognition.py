@@ -52,10 +52,11 @@ class Recognition(Disentangle):
     topClass(k):
         obtain top-k correctly detected classes      
     """    
-    def __init__(self, num_class=100):
+    def __init__(self, num_class=100, ignore_null=False):
         super(Recognition, self).__init__()
         np.seterr(divide='ignore', invalid='ignore')
         self.num_class = num_class
+        self.ignore_null = ignore_null
         self.reset_global()   
         
     ##%%%%%%%%%%%%%%%%%%% RESET OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,7 +92,7 @@ class Recognition(Disentangle):
         self.reset()
     
     ##%%%%%%%%%%%%%%%%%%% COMPUTE OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    def compute_AP(self, component="ivt"):
+    def compute_AP(self, component="ivt", ignore_null=False):
         """
         compute performance for all seen examples after a reset()
         @args
@@ -113,10 +114,11 @@ class Recognition(Disentangle):
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
             classwise = average_precision_score(targets, predicts, average=None)
+            if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
         return {"AP":classwise, "mAP":mean}
     
-    def compute_global_AP(self, component="ivt"):
+    def compute_global_AP(self, component="ivt", ignore_null=False):
         """
         compute performance for all seen examples after a reset_global()
         @args
@@ -145,10 +147,11 @@ class Recognition(Disentangle):
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
             classwise = average_precision_score(targets, predicts, average=None)
+            if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
         return {"AP":classwise, "mAP":mean}    
     
-    def compute_video_AP(self, component="ivt"):
+    def compute_video_AP(self, component="ivt", ignore_null=False):
         """
         compute performance video-wise AP
         @args
@@ -180,6 +183,7 @@ class Recognition(Disentangle):
                 video_log.append( classwise.reshape([1,-1]) )
         video_log = np.concatenate(video_log, axis=0)         
         videowise = np.nanmean(video_log, axis=0)
+        if (ignore_null and component=="ivt"): videowise = videowise[:-6]
         mean      = np.nanmean(videowise)
         return {"AP":classwise, "mAP":mean}
 
