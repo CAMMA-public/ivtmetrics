@@ -8,6 +8,8 @@ setup(
     author_email='nwoye@unistra.fr',    
     description='A Python evaluation metrics package for action triplet recognition',
     keywords = ['triplet', 'average precision', 'AP'], 
+    long_description = open('README.txt').read(),
+    long_description_content_type = "text/markdown",
     url='https://github.com/CAMMA-public/ivtmetrics',
     download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.2.tar.gz',    # I explain this later on
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
