@@ -20,7 +20,7 @@ the various components of the triplets as well as their association
 performances at various levels.
 
 Installation
-============
+------------
 
 Install via PyPi
 ~~~~~~~~~~~~~~~~
@@ -41,7 +41,7 @@ Install via Conda
 Python 3.5-3.9 and numpy and scikit-learn are required.
 
 Metrics
-=======
+-------
 
 The metrics have been aligned with what is reported by
 `CholecT50 <https://arxiv.org/abs/2109.03223>`__ benchmark.
@@ -308,12 +308,12 @@ Any ``nan`` value in results is for classes with no occurrence in the
 data sample.
 
 Docker
-======
+------
 
 coming soon ..
 
 Citation
-========
+--------
 
 If you use this metrics in your project or research, please consider
 citing the associated publication:
@@ -328,7 +328,7 @@ citing the associated publication:
    }
 
 References
-==========
+----------
 
 1. Nwoye, C. I., Yu, T., Gonzalez, C., Seeliger, B., Mascagni, P.,
    Mutter, D., … & Padoy, N. (2021). Rendezvous: Attention Mechanisms
