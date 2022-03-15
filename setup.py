@@ -2,14 +2,14 @@ from distutils.core import setup
 
 setup(
     name='ivtmetrics',
-    version='0.0.1',    
+    version='0.0.2',    
     packages=['ivtmetrics'],
     author='Chinedu Nwoye',
     author_email='nwoye@unistra.fr',    
     description='A Python evaluation metrics package for action triplet recognition',
     keywords = ['triplet', 'average precision', 'AP'], 
     url='https://github.com/CAMMA-public/ivtmetrics',
-    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.1.tar.gz',    # I explain this later on
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.2.tar.gz',    # I explain this later on
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     install_requires=['scikit-learn',
                       'numpy',
