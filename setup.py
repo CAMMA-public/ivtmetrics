@@ -6,7 +6,7 @@ long_description = (this_directory / "README.rst").read_text()
 
 setup(
     name='ivtmetrics',
-    version='0.0.4',    
+    version='0.0.5',    
     packages=['ivtmetrics'],
     author='Chinedu Nwoye',
     author_email='nwoye@unistra.fr',    
@@ -15,9 +15,8 @@ setup(
     long_description = long_description,
     long_description_content_type ='text/x-rst',
     url='https://github.com/CAMMA-public/ivtmetrics',
-    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.4.tar.gz',    # I explain this later on
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.5.tar.gz',    # I explain this later on
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
-    package_data={'': ['ivtmetrics/maps.txt', 'README.md', 'README.rst']},
     include_package_data=True,
     install_requires=['scikit-learn',
                       'numpy',
@@ -39,4 +38,5 @@ setup(
 )    
 
 # guide @ https://medium.com/@joel.barmettler/how-to-upload-your-python-package-to-pypi-65edc5fe9c56
-# 'Operating System :: POSIX :: Linux :: Windows :: Mac :: Unix',   
+# 'Operating System :: POSIX :: Linux :: Windows :: Mac :: Unix',  
+#    package_data={'': ['ivtmetrics/maps.txt', 'README.md', 'README.rst']}, 

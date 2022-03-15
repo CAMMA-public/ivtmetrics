@@ -26,7 +26,7 @@ class Disentangle(object):
         call filter a component labels from the inputs labels     
     """
 
-    def __init__(self, url="maps.txt"):
+    def __init__(self, url="maps.py"):
         self.bank = np.genfromtxt(url, dtype=int, comments='#', delimiter=',', skip_header=0)
         
     def decompose(self, inputs, component):

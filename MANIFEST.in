@@ -1,13 +1,4 @@
-include maps.txt
 include README.md
 include README.rst
+include ivtmetrics/maps.txt
 recursive-include data *
-README.txt
-setup.cfg
-setup.py
-maps.txt
-ivtmetrics/__init__.py
-ivtmetrics/detection.py
-ivtmetrics/disentangle.py
-ivtmetrics/recognition.py
-ivtmetrics/maps.txt

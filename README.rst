@@ -19,7 +19,8 @@ Supports disentangle prediction and obtained filtered performance for
 the various components of the triplets as well as their association
 performances at various levels.
 
-## Installation
+Installation
+============
 
 Install via PyPi
 ~~~~~~~~~~~~~~~~
@@ -39,7 +40,8 @@ Install via Conda
 
 Python 3.5-3.9 and numpy and scikit-learn are required.
 
-## Metrics
+Metrics
+=======
 
 The metrics have been aligned with what is reported by
 `CholecT50 <https://arxiv.org/abs/2109.03223>`__ benchmark.
@@ -133,7 +135,8 @@ args:
 -  the output is a ``dict`` with keys(“AP”, “mAP”) for per-class and
    mean AP respectively.
 
-#### Example usage
+Example usage
+~~~~~~~~~~~~~
 
 .. code:: python
 
@@ -232,7 +235,7 @@ The following function are possible with the ``Detection`` class:
 args:
 ~~~~~
 
-1. **list of list format**: [[tripletID, toolID, toolProbs, x, y, w, h],
+1. ``list of list format``: [[tripletID, toolID, toolProbs, x, y, w, h],
    [tripletID, toolID, toolProbs, x, y, w, h], …], where:
 
    -  ``tripletID`` = triplet unique identity
@@ -244,7 +247,7 @@ args:
    -  ``h`` = height of the box
    -  The [x,y,w,h] are scaled between 0..1
 
-2. **list of dict format**: [{“triplet”:tripletID, “instrument”:[toolID,
+2. ``list of dict format``: [{“triplet”:tripletID, “instrument”:[toolID,
    toolProbs, x, y, w, h]}, {“triplet”:tripletID, “instrument”:[toolID,
    toolProbs, x, y, w, h]}, …].
 3. ``format`` args describes the input format with either of the values
@@ -258,7 +261,8 @@ args:
    “mPre”) for per-class AP, mean AP, per-class Recall, mean Recall,
    per-class Precision and mean Precision respectively.
 
-#### Example usage
+Example usage
+~~~~~~~~~~~~~
 
 .. code:: python
 
@@ -303,11 +307,13 @@ args:
 Any ``nan`` value in results is for classes with no occurrence in the
 data sample.
 
-## Docker
+Docker
+======
 
 coming soon ..
 
-# Citation
+Citation
+========
 
 If you use this metrics in your project or research, please consider
 citing the associated publication:
@@ -321,7 +327,8 @@ citing the associated publication:
      year={2021}
    }
 
-### References
+References
+==========
 
 1. Nwoye, C. I., Yu, T., Gonzalez, C., Seeliger, B., Mascagni, P.,
    Mutter, D., … & Padoy, N. (2021). Rendezvous: Attention Mechanisms
@@ -334,6 +341,7 @@ citing the associated publication:
    Computer-Assisted Intervention (pp. 364-374). Springer, Cham.
 3. https://cholectriplet2021.grand-challenge.org
 4. http://camma.u-strasbg.fr/datasets
+
 
 License
 -------

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 __library__ = "ivtmetrics"
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 __author__  = 'Chinedu Nwoye'
 __supervisor__  = 'Nicolas Padoy'
 __credits__ = 'CAMMA, ICube Lab, University of Strasbourg, France'
