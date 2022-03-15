@@ -27,7 +27,9 @@ pip install ivtmetrics
 Python 3.5-3.9 and numpy and scikit-learn are required.
 
 ### Install via Conda
-coming soon ...
+```
+conda install -c nwoye ivtmetrics
+```
 
 <a name="Metrics"></a>
 ## Metrics
