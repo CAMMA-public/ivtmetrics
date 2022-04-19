@@ -9,11 +9,15 @@ for benchmarking surgical action triplet detection and recognition.
 Features at a glance
 --------------------
 
-The following are available with ivtmetrics: 1. **Recognition
+The following are available with ivtmetrics: 
+
+1. **Recognition
 Evaluation**: Provides AP metrics to measure the performance of a model
-on action triplet recognition. 2. **Detection Evaluation**: Supports
+on action triplet recognition. 
+2. **Detection Evaluation**: Supports
 Intersection over Union distances measure of the triplet localization
-with respect to the instruments. 3. **Flexible Analysis**: (1) Supports
+with respect to the instruments. 
+3. **Flexible Analysis**: (1) Supports
 for switching between frame-wise to video-wise averaging of the AP. (2)
 Supports disentangle prediction and obtained filtered performance for
 the various components of the triplets as well as their association

@@ -7,6 +7,7 @@ The **ivtmetrics** library provides a Python implementation of metrics for bench
 ## Features at a glance
 
 The following are available with ivtmetrics:
+
 1. **Recognition Evaluation**: Provides AP metrics to measure the performance of a model on action triplet recognition. 
 2. **Detection Evaluation**: Supports Intersection over Union distances measure of the triplet localization with respect to the instruments.
 3. **Flexible Analysis**: (1) Supports for switching between frame-wise to video-wise averaging of the AP.

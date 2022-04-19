@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
+conda/
 # Distribution / packaging
 .Python
 build/
@@ -128,4 +129,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-*test_ivtmetrics.py
+*__test__.py

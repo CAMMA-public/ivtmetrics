@@ -185,7 +185,7 @@ class Recognition(Disentangle):
         videowise = np.nanmean(video_log, axis=0)
         if (ignore_null and component=="ivt"): videowise = videowise[:-6]
         mean      = np.nanmean(videowise)
-        return {"AP":classwise, "mAP":mean}
+        return {"AP":videowise, "mAP":mean}
 
     ##%%%%%%%%%%%%%%%%%%% TOP OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
     
