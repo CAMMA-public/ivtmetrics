@@ -14,9 +14,11 @@ The following are available with ivtmetrics:
 1. **Recognition
 Evaluation**: Provides AP metrics to measure the performance of a model
 on action triplet recognition. 
+
 2. **Detection Evaluation**: Supports
 Intersection over Union distances measure of the triplet localization
 with respect to the instruments. 
+
 3. **Flexible Analysis**: (1) Supports
 for switching between frame-wise to video-wise averaging of the AP. (2)
 Supports disentangle prediction and obtained filtered performance for
@@ -48,7 +50,7 @@ Metrics
 -------
 
 The metrics have been aligned with what is reported by
-`CholecT50 <https://arxiv.org/abs/2109.03223>`__ benchmark.
+`CholecT50 <https://www.sciencedirect.com/science/article/abs/pii/S1361841522000846>`__ benchmark.
 **ivtmetrics** can be imported in the following way:
 
 .. code:: python
@@ -202,7 +204,7 @@ The following function are possible with the ``Detection`` class:
 |                                   | corresponding groundtruth. Each   |
 |                                   | frame prediction/groundtruth can  |
 |                                   | be either as a ``list of list``   |
-|                                   | or ``list of dict``.              |
+|                                   | (more details below).             |
 +-----------------------------------+-----------------------------------+
 | video_end()                       | Call to make the end of one video |
 |                                   | sequence.                         |
@@ -311,6 +313,36 @@ Example usage
 Any ``nan`` value in results is for classes with no occurrence in the
 data sample.
 
+
+
+
+
+
+Disentangle
+-----------
+
+Although, the ``Detection()`` and ``Recognition()`` classes uses the ``Disentangle()`` internally, this function can still be used independently for component filtering in the following ways:
+
+
+.. code:: python
+
+   filter = ivtmetrics.Disentangle()
+
+
+Afterwards, any of the component's predictions/labels can be filtered from the main triplet's predictions/labels as follows:
+
+.. code:: python
+   i_labels = filter.extract(inputs=ivt_labels, component="i")
+   v_preds  = filter.extract(inputs=ivt_preds, component="v")
+   t_preds  = filter.extract(inputs=ivt_preds, component="t")
+   iv_labels = filter.extract(inputs=ivt_labels, component="iv")
+   it_labels = filter.extract(inputs=ivt_labels, component="it")
+
+
+
+
+
+
 Docker
 ------
 
@@ -324,11 +356,11 @@ citing the associated publication:
 
 ::
 
-   @article{nwoye2021rendezvous,
-     title={Rendezvous: Attention Mechanisms for the Recognition of Surgical Action Triplets in Endoscopic Videos},
-     author={Nwoye, Chinedu Innocent and Yu, Tong and Gonzalez, Cristians and Seeliger, Barbara and Mascagni, Pietro and Mutter, Didier and Marescaux, Jacques and Padoy, Nicolas},
-     journal={arXiv preprint arXiv:2109.03223},
-     year={2021}
+   @article{nwoye2022data,
+      title={Data Splits and Metrics for Benchmarking Methods on Surgical Action Triplet Datasets},
+      author={Nwoye, Chinedu Innocent and Padoy, Nicolas},
+      journal={arXiv preprint arXiv:2204.05235},
+      year={2022}
    }
 
 References
@@ -343,8 +375,9 @@ References
    instrument-tissue interactions in endoscopic videos via action
    triplets. In International Conference on Medical Image Computing and
    Computer-Assisted Intervention (pp. 364-374). Springer, Cham.
-3. https://cholectriplet2021.grand-challenge.org
-4. http://camma.u-strasbg.fr/datasets
+3. http://camma.u-strasbg.fr/datasets
+4. https://cholectriplet2021.grand-challenge.org
+5. https://cholectriplet2022.grand-challenge.org
 
 
 License
