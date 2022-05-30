@@ -189,7 +189,7 @@ Detection Metrics
 
 .. code:: python
 
-   metric = ivtmetrics.Detection(num_class, num_tool)
+   metric = ivtmetrics.Detection(num_class, num_tool, threshold=0.5)
 
 This takes an argument ``num_class`` which is default to ``100`` and
 ``num_tool`` which is default to ``6``
