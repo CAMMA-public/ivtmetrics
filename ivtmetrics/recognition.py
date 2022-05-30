@@ -4,7 +4,7 @@
 An python implementation recognition AP for surgical action triplet evaluation.
 Created on Thu Dec 30 12:37:56 2021
 @author: nwoye chinedu i.
-icube, unistra
+(c) icube, unistra
 """
 #%%%%%%%% imports %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 import numpy as np
@@ -110,9 +110,9 @@ class Recognition(Disentangle):
             targets  = self.extract(self.targets, component)
             predicts = self.extract(self.predictions, component)
         else:
-            sys.exit(f"Function filtering {component} not supported yet!")
+            sys.exit(f"Function filtering {component} not yet supported!")
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
+            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
@@ -143,9 +143,9 @@ class Recognition(Disentangle):
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
         else:
-            sys.exit(f"Function filtering {component} not supported yet!")            
+            sys.exit(f"Function filtering {component} not yet supported!")            
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore', message='Mean of empty slice')            
+            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
@@ -172,19 +172,19 @@ class Recognition(Disentangle):
             global_predictions.append(self.predictions)
         video_log = []
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore', message='Mean of empty slice')
+            warnings.simplefilter("ignore", category=RuntimeWarning)
             for targets, predicts in zip(global_targets, global_predictions):
                 if component in ["ivt", "it", "iv", "t", "v", "i"]:
                     targets  = self.extract(targets, component)
                     predicts = self.extract(predicts, component)
                 else:
-                    sys.exit(f"Function filtering {component} not supported yet!")                        
+                    sys.exit(f"Function filtering {component} not yet supported!")                        
                 classwise = average_precision_score(targets, predicts, average=None)
                 video_log.append( classwise.reshape([1,-1]) )
-        video_log = np.concatenate(video_log, axis=0)         
-        videowise = np.nanmean(video_log, axis=0)
-        if (ignore_null and component=="ivt"): videowise = videowise[:-6]
-        mean      = np.nanmean(videowise)
+            video_log = np.concatenate(video_log, axis=0)         
+            videowise = np.nanmean(video_log, axis=0)
+            if (ignore_null and component=="ivt"): videowise = videowise[:-6]
+            mean      = np.nanmean(videowise)
         return {"AP":videowise, "mAP":mean}
 
     ##%%%%%%%%%%%%%%%%%%% TOP OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    

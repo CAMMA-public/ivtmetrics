@@ -6,7 +6,7 @@ long_description = (this_directory / "README.rst").read_text()
 
 setup(
     name='ivtmetrics',
-    version='0.0.8',    
+    version='0.0.9',    
     packages=['ivtmetrics'],
     author='Chinedu Nwoye',
     author_email='nwoye.chinedu@gmail.com',    
@@ -15,7 +15,7 @@ setup(
     long_description = long_description,
     long_description_content_type ='text/x-rst',
     url='https://github.com/CAMMA-public/ivtmetrics',
-    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.8.tar.gz',    # I explain this later on
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.9.tar.gz',    # I explain this later on
     include_package_data=True,
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     install_requires=['scikit-learn',

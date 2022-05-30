@@ -9,6 +9,7 @@ icube, unistra
 #%%%%%%%% imports %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 import numpy as np
 import sys
+import warnings
 from ivtmetrics.recognition import Recognition
 
 #%%%%%%%%%% RECOGNITION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,7 +51,7 @@ class Detection(Recognition):
           add compute_global_AP('i/ivt') return AP for all seen examples
           add reset_video()
     """
-    def __init__(self, num_class=100, num_tool=6):
+    def __init__(self, num_class=100, num_tool=6, threshold=0.5):
         super(Recognition, self).__init__()
         self.num_class      = num_class  
         self.num_tool       = num_tool                
@@ -60,6 +61,7 @@ class Detection(Recognition):
         self.accumulator    = {}
         self.video_count    = 0
         self.end_call       = False
+        self.threshold      = threshold
         self.reset()        
                 
     def reset(self):
@@ -115,6 +117,7 @@ class Detection(Recognition):
         return status    
     
     def list2stack(self, x):
+        if x == []: x = [[-1,-1,-1,-1,-1,-1]] # empty
         #x format for a single frame: list(list): each list = [tripletID, toolID, toolProbs, x, y, w, h] bbox is scaled (0..1)
         assert isinstance(x[0], list), "Each frame must be a list of lists, each list a prediction of triplet and object locations"
         x = np.stack(x, axis=0)
@@ -136,7 +139,6 @@ class Detection(Recognition):
             p = [d['triplet']]
             p.extend(d["instrument"])
             y.append(p)
-#        y = np.stack(y, axis=0)
         return self.list2stack(y)    
     
     def update(self, targets, predictions, format="list"): 
@@ -160,38 +162,38 @@ class Detection(Recognition):
             sys.exit("unkown input format for update function. Must be a list or dict")
         if len(detection_pd) + len(detection_gt) == 0:
             return
-        detection_gt_i = detection_gt.copy()
-        detection_pd_i = detection_pd.copy()
+        detection_gt_ivt = detection_gt.copy()
+        detection_pd_ivt = detection_pd.copy()
         # for triplet
-        for gt in detection_gt: 
+        for gt in detection_gt_ivt: 
             self.accumulator[self.video_count]["npos"][int(gt[0])] += 1
-        for det_pd in detection_pd:
+        for det_pd in detection_pd_ivt:
             self.accumulator[self.video_count]["ndet"][int(det_pd[0])] += 1
             matched = False
-            for k, det_gt in enumerate(detection_gt):
+            for k, det_gt in enumerate(detection_gt_ivt):
                 y = det_gt[0:] 
                 f = det_pd[0:]
-                if self.is_match(y, f, threshold=0.5):
-                    detection_gt = np.delete(detection_gt, obj=k, axis=0)
+                if self.is_match(y, f, threshold=self.threshold):
+                    detection_gt_ivt = np.delete(detection_gt_ivt, obj=k, axis=0)
                     matched = True
                     break
             if matched:
                 self.accumulator[self.video_count]["hits"][int(det_pd[0])].append(1.0)
             else:
                 self.accumulator[self.video_count]["hits"][int(det_pd[0])].append(0.0)
-        # for instrument
-        detection_gt = detection_gt_i
-        detection_pd = detection_pd_i
-        for gt in detection_gt:
+        # for instrument        
+        detection_gt_i = detection_gt.copy()
+        detection_pd_i = detection_pd.copy()
+        for gt in detection_gt_i:
             self.accumulator[self.video_count]["npos_i"][int(gt[1])] += 1
-        for det_pd in detection_pd:
+        for det_pd in detection_pd_i:
             self.accumulator[self.video_count]["ndet_i"][int(det_pd[1])] += 1
             matched = False
-            for k, det_gt in enumerate(detection_gt):                
-                y = det_gt[1:6] 
-                f = det_pd[1:6]
-                if self.is_match(y, f, threshold=0.5):
-                    detection_gt = np.delete(detection_gt, obj=k, axis=0)
+            for k, det_gt in enumerate(detection_gt_i):                
+                y = det_gt[1:] 
+                f = det_pd[1:]
+                if self.is_match(y, f, threshold=self.threshold):
+                    detection_gt_i = np.delete(detection_gt_i, obj=k, axis=0)
                     matched = True
                     break
             if matched:
@@ -240,7 +242,9 @@ class Detection(Recognition):
                 classwise_ap.append(ap)
                 classwise_rec.append(np.max(rec))
                 classwise_prec.append(np.max(prec))
-        return (classwise_ap, np.nanmean(classwise_ap)), (classwise_rec, np.nanmean(classwise_rec)), (classwise_prec, np.nanmean(classwise_prec))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            return (classwise_ap, np.nanmean(classwise_ap)), (classwise_rec, np.nanmean(classwise_rec)), (classwise_prec, np.nanmean(classwise_prec))
     
     def compute_video_AP(self, component="ivt"):
         classwise_ap    = []
@@ -252,12 +256,14 @@ class Detection(Recognition):
             classwise_ap.append(ap)
             classwise_rec.append(rec)
             classwise_prec.append(prec)
-        classwise_ap    = np.nanmean(np.stack(classwise_ap, axis=0), axis=0)
-        classwise_rec   = np.nanmean(np.stack(classwise_rec, axis=0), axis=0)
-        classwise_prec  = np.nanmean(np.stack(classwise_prec, axis=0), axis=0)        
-        mAP             = np.nanmean(classwise_ap)
-        mRec            = np.nanmean(classwise_rec)
-        mPrec           = np.nanmean(classwise_prec) 
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            classwise_ap    = np.nanmean(np.stack(classwise_ap, axis=0), axis=0)
+            classwise_rec   = np.nanmean(np.stack(classwise_rec, axis=0), axis=0)
+            classwise_prec  = np.nanmean(np.stack(classwise_prec, axis=0), axis=0)        
+            mAP             = np.nanmean(classwise_ap)
+            mRec            = np.nanmean(classwise_rec)
+            mPrec           = np.nanmean(classwise_prec) 
         return {"AP":classwise_ap, "mAP":mAP, "Rec":classwise_rec, "mRec":mRec, "Pre":classwise_prec, "mPre":mPrec}     
             
     def compute_AP(self, component="ivt"):

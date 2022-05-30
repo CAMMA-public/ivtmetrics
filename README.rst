@@ -204,6 +204,7 @@ The following function are possible with the ``Detection`` class:
 |                                   | corresponding groundtruth. Each   |
 |                                   | frame prediction/groundtruth can  |
 |                                   | be either as a ``list of list``   |
+|                                   | or as a ``list of dict``.         |
 |                                   | (more details below).             |
 +-----------------------------------+-----------------------------------+
 | video_end()                       | Call to make the end of one video |
@@ -236,7 +237,6 @@ The following function are possible with the ``Detection`` class:
 |                                   | for all seen samples.             |
 +-----------------------------------+-----------------------------------+
 
-.. _args-1:
 
 args:
 ~~~~~
@@ -261,7 +261,7 @@ args:
 4. ``component`` can be any of the following (‘i’, ‘v’, ‘t’, ‘iv’,
    ‘it’,‘ivt’) to compute performance for (instrument, verb, target,
    instrument-verb, instrument-target, instrument-verb-target)
-   respectively, default is ‘ivt’ for triplets.<
+   respectively, default is ‘ivt’ for triplets.
 
 -  the output is a ``dict`` with keys(“AP”, “mAP”, “Rec”, “mRec”, “Pre”,
    “mPre”) for per-class AP, mean AP, per-class Recall, mean Recall,
@@ -332,13 +332,14 @@ Although, the ``Detection()`` and ``Recognition()`` classes uses the ``Disentang
 Afterwards, any of the component's predictions/labels can be filtered from the main triplet's predictions/labels as follows:
 
 .. code:: python
+
    i_labels = filter.extract(inputs=ivt_labels, component="i")
    v_preds  = filter.extract(inputs=ivt_preds, component="v")
    t_preds  = filter.extract(inputs=ivt_preds, component="t")
    iv_labels = filter.extract(inputs=ivt_labels, component="iv")
    it_labels = filter.extract(inputs=ivt_labels, component="it")
 
-
+In this example, labels = (batch of) vector of groundtruth labels; preds = (batch of) vector of predicted probability scores.
 
 
 
