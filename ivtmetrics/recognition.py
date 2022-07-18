@@ -110,9 +110,9 @@ class Recognition(Disentangle):
             targets  = self.extract(self.targets, component)
             predicts = self.extract(self.predictions, component)
         else:
-            sys.exit(f"Function filtering {component} not yet supported!")
+            sys.exit("Function filtering {} not yet supported!".format(component))
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
+            warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
@@ -143,9 +143,9 @@ class Recognition(Disentangle):
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
         else:
-            sys.exit(f"Function filtering {component} not yet supported!")            
+            sys.exit("Function filtering {} not yet supported!".format(component))            
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
+            warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
@@ -178,7 +178,7 @@ class Recognition(Disentangle):
                     targets  = self.extract(targets, component)
                     predicts = self.extract(predicts, component)
                 else:
-                    sys.exit(f"Function filtering {component} not yet supported!")                        
+                    sys.exit("Function filtering {} not yet supported!".format(component))                        
                 classwise = average_precision_score(targets, predicts, average=None)
                 video_log.append( classwise.reshape([1,-1]) )
             video_log = np.concatenate(video_log, axis=0)         
@@ -214,7 +214,7 @@ class Recognition(Disentangle):
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
         else:
-            sys.exit(f"Function filtering {component} not supported yet!")
+            sys.exit("Function filtering {} not supported yet!".format(component))
         correct = 0.0
         total   = 0
         for gt, pd in zip(targets, predicts):
@@ -248,7 +248,7 @@ class Recognition(Disentangle):
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
         else:
-            sys.exit(f"Function filtering {component} not supported yet!")            
+            sys.exit("Function filtering {} not supported yet!".format(component))            
         classwise = average_precision_score(targets, predicts, average=None)
         pd_idx    = (-classwise).argsort()[:k]
         output    = {x:classwise[x] for x in pd_idx}

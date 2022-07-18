@@ -6,20 +6,20 @@ long_description = (this_directory / "README.rst").read_text()
 
 setup(
     name='ivtmetrics',
-    version='0.0.9',    
+    version='0.1.0',    
     packages=['ivtmetrics'],
     author='Chinedu Nwoye',
     author_email='nwoye.chinedu@gmail.com',    
     description='A Python evaluation metrics package for action triplet recognition',
-    keywords = ['triplet', 'average precision', 'AP'], 
+    keywords = ['triplet', 'average precision', 'AP', 'mAP'], 
     long_description = long_description,
     long_description_content_type ='text/x-rst',
     url='https://github.com/CAMMA-public/ivtmetrics',
-    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.0.9.tar.gz',    # I explain this later on
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.1.0.tar.gz', 
     include_package_data=True,
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     install_requires=['scikit-learn',
-                      'numpy',
+                      'numpy>=1.21',
                       ],
 
     classifiers=[
