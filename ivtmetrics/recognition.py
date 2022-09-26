@@ -116,7 +116,7 @@ class Recognition(Disentangle):
         else:
             sys.exit("Function filtering {} not yet supported!".format(component))
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
+            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             classwise = self.resolve_nan(classwise)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
@@ -150,7 +150,7 @@ class Recognition(Disentangle):
         else:
             sys.exit("Function filtering {} not yet supported!".format(component))            
         with warnings.catch_warnings():
-            warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
+            warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
             classwise = self.resolve_nan(classwise)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
@@ -178,6 +178,7 @@ class Recognition(Disentangle):
             global_predictions.append(self.predictions)
         video_log = []
         with warnings.catch_warnings():
+            warnings.filterwarnings(action='ignore', message='')
             warnings.simplefilter("ignore", category=RuntimeWarning)
             for targets, predicts in zip(global_targets, global_predictions):
                 if component in ["ivt", "it", "iv", "t", "v", "i"]:
