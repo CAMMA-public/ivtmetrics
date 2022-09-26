@@ -58,6 +58,10 @@ class Recognition(Disentangle):
         self.num_class = num_class
         self.ignore_null = ignore_null
         self.reset_global()   
+
+    def resolve_nan(self, classwise):
+        classwise[classwise==-0.0] = np.nan
+        return classwise
         
     ##%%%%%%%%%%%%%%%%%%% RESET OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def reset(self):
@@ -114,6 +118,7 @@ class Recognition(Disentangle):
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
+            classwise = self.resolve_nan(classwise)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
         return {"AP":classwise, "mAP":mean}
@@ -147,6 +152,7 @@ class Recognition(Disentangle):
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore') #, message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
+            classwise = self.resolve_nan(classwise)
             if (ignore_null and component=="ivt"): classwise = classwise[:-6]
             mean      = np.nanmean(classwise)
         return {"AP":classwise, "mAP":mean}    
@@ -180,6 +186,7 @@ class Recognition(Disentangle):
                 else:
                     sys.exit("Function filtering {} not yet supported!".format(component))                        
                 classwise = average_precision_score(targets, predicts, average=None)
+                classwise = self.resolve_nan(classwise)
                 video_log.append( classwise.reshape([1,-1]) )
             video_log = np.concatenate(video_log, axis=0)         
             videowise = np.nanmean(video_log, axis=0)
@@ -250,6 +257,7 @@ class Recognition(Disentangle):
         else:
             sys.exit("Function filtering {} not supported yet!".format(component))            
         classwise = average_precision_score(targets, predicts, average=None)
+        classwise = self.resolve_nan(classwise)
         pd_idx    = (-classwise).argsort()[:k]
         output    = {x:classwise[x] for x in pd_idx}
         return output

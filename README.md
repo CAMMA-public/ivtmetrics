@@ -57,6 +57,7 @@ This takes an argument `num_class` which is default to `100`
 
 The following function are possible with the `Recognition` class:
 
+
 Name | Description
 :--- | :---
 update(`targets, predictions`)|takes in a (batch of) vector predictions and their corresponding groundtruth. vector size must match `num_class` in the class initialization.
@@ -138,7 +139,9 @@ This takes an argument `num_class` which is default to `100` and `num_tool` whic
 The following function are possible with the `Detection` class:
 
 Name | Description
+
 :--- | :---
+
 update(`targets, predictions, format`)|input: takes in a (batch of) list/dict predictions and their corresponding groundtruth. Each frame prediction/groundtruth can be either as a `list of list` or `list of dict`. (more details below).
 video_end()|Call to make the end of one video sequence.
 reset()|Reset current records. Useful during training and can be called at the begining of each epoch to avoid overlapping epoch performances.
