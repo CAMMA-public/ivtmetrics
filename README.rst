@@ -3,27 +3,18 @@
 ivtmetrics
 ==========
 
-The **ivtmetrics** library provides a Python implementation of metrics
-for benchmarking surgical action triplet detection and recognition.
+The **ivtmetrics** library provides a Python implementation of metrics for benchmarking surgical action triplet detection and recognition.
 
 Features at a glance
 --------------------
 
-The following are available with ivtmetrics: 
+The following are available with ivtmetrics:
 
-1. **Recognition
-Evaluation**: Provides AP metrics to measure the performance of a model
-on action triplet recognition. 
-
-2. **Detection Evaluation**: Supports
-Intersection over Union distances measure of the triplet localization
-with respect to the instruments. 
-
-3. **Flexible Analysis**: (1) Supports
-for switching between frame-wise to video-wise averaging of the AP. (2)
-Supports disentangle prediction and obtained filtered performance for
-the various components of the triplets as well as their association
-performances at various levels.
+1. **Recognition Evaluation**: Provides AP metrics to measure the performance of a model on action triplet recognition.
+2. **Detection Evaluation**: Supports Intersection over Union distances measure of the triplet localization with respect to the instruments.
+3. **Flexible Analysis**: 
+ (1) Supports for switching between frame-wise to video-wise averaging of the AP.
+ (2) Supports disentangle prediction and obtained filtered performance for the various components of the triplets as well as their association performances at various levels.
 
 Installation
 ------------
@@ -46,12 +37,11 @@ Install via Conda
 
 Python 3.5-3.9 and numpy and scikit-learn are required.
 
+
 Metrics
 -------
 
-The metrics have been aligned with what is reported by
-`CholecT50 <https://www.sciencedirect.com/science/article/abs/pii/S1361841522000846>`__ benchmark.
-**ivtmetrics** can be imported in the following way:
+The metrics have been aligned with what is reported by `CholecT50 <https://www.sciencedirect.com/science/article/abs/pii/S1361841522000846>`__ benchmark. **ivtmetrics** can be imported in the following way:
 
 .. code:: python
 
@@ -99,19 +89,19 @@ The following function are possible with the ``Recognition`` class:
 |                                   | can be called at the begining of  |
 |                                   | new experiment.                   |
 +-----------------------------------+-----------------------------------+
-| compu                             | Obtain the average precision on   |
-| te_AP(``component, ignore_null``) | the fly. This gives the AP only   |
+| compute_AP                        | Obtain the average precision on   |
+| (``component, ignore_null``)      | the fly. This gives the AP only   |
 |                                   | on examples cases after the last  |
 |                                   | ``reset()`` call. Useful for      |
 |                                   | epoch performance during          |
 |                                   | training.                         |
 +-----------------------------------+-----------------------------------+
-| compute_vid                       | (RECOMMENDED) compute video-wise  |
-| eo_AP(``component, ignore_null``) | AP performance as used in         |
+| compute_video_AP                  | (RECOMMENDED) compute video-wise  |
+| (``component, ignore_null``)      | AP performance as used in         |
 |                                   | CholecT50 benchmarks.             |
 +-----------------------------------+-----------------------------------+
-| compute_glob                      | compute frame-wise AP performance |
-| al_AP(``component, ignore_null``) | for all seen samples.             |
+| compute_global_AP                 | Compute frame-wise AP performance |
+| (``component, ignore_null``)      | for all seen samples.             |
 +-----------------------------------+-----------------------------------+
 | topK(``k, component``)            | Obtain top K performance on       |
 |                                   | action triplet recognition for    |
@@ -141,8 +131,9 @@ args:
 -  the output is a ``dict`` with keys(“AP”, “mAP”) for per-class and
    mean AP respectively.
 
+
 Example usage
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 .. code:: python
 
@@ -204,8 +195,8 @@ The following function are possible with the ``Detection`` class:
 |                                   | corresponding groundtruth. Each   |
 |                                   | frame prediction/groundtruth can  |
 |                                   | be either as a ``list of list``   |
-|                                   | or as a ``list of dict``.         |
-|                                   | (more details below).             |
+|                                   | or ``list of dict``. (more        |
+|                                   | details below).                   |
 +-----------------------------------+-----------------------------------+
 | video_end()                       | Call to make the end of one video |
 |                                   | sequence.                         |
@@ -241,7 +232,7 @@ The following function are possible with the ``Detection`` class:
 args:
 ~~~~~
 
-1. ``list of list format``: [[tripletID, toolID, toolProbs, x, y, w, h],
+1. **list of list format**: [[tripletID, toolID, toolProbs, x, y, w, h],
    [tripletID, toolID, toolProbs, x, y, w, h], …], where:
 
    -  ``tripletID`` = triplet unique identity
@@ -253,7 +244,7 @@ args:
    -  ``h`` = height of the box
    -  The [x,y,w,h] are scaled between 0..1
 
-2. ``list of dict format``: [{“triplet”:tripletID, “instrument”:[toolID,
+2. **list of dict format**: [{“triplet”:tripletID, “instrument”:[toolID,
    toolProbs, x, y, w, h]}, {“triplet”:tripletID, “instrument”:[toolID,
    toolProbs, x, y, w, h]}, …].
 3. ``format`` args describes the input format with either of the values
@@ -261,11 +252,12 @@ args:
 4. ``component`` can be any of the following (‘i’, ‘v’, ‘t’, ‘iv’,
    ‘it’,‘ivt’) to compute performance for (instrument, verb, target,
    instrument-verb, instrument-target, instrument-verb-target)
-   respectively, default is ‘ivt’ for triplets.
+   respectively, default is ‘ivt’ for triplets.<
 
 -  the output is a ``dict`` with keys(“AP”, “mAP”, “Rec”, “mRec”, “Pre”,
    “mPre”) for per-class AP, mean AP, per-class Recall, mean Recall,
    per-class Precision and mean Precision respectively.
+
 
 Example usage
 ~~~~~~~~~~~~~
@@ -314,22 +306,19 @@ Any ``nan`` value in results is for classes with no occurrence in the
 data sample.
 
 
-
-
-
-
 Disentangle
------------
+~~~~~~~~~~~
 
-Although, the ``Detection()`` and ``Recognition()`` classes uses the ``Disentangle()`` internally, this function can still be used independently for component filtering in the following ways:
-
+Although, the ``Detection()`` and ``Recognition()`` classes uses the
+``Disentangle()`` internally, this function can still be used
+independently for component filtering in the following ways:
 
 .. code:: python
 
    filter = ivtmetrics.Disentangle()
 
-
-Afterwards, any of the component's predictions/labels can be filtered from the main triplet's predictions/labels as follows:
+Afterwards, each of the component’s predictions/labels can be filtered
+from the main triplet’s predictions/labels as follows:
 
 .. code:: python
 
@@ -339,15 +328,41 @@ Afterwards, any of the component's predictions/labels can be filtered from the m
    iv_labels = filter.extract(inputs=ivt_labels, component="iv")
    it_labels = filter.extract(inputs=ivt_labels, component="it")
 
-In this example, labels = (batch of) vector of groundtruth labels; preds = (batch of) vector of predicted probability scores.
 
+Triplet Association Scores (TAS)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This assesses the quality of bounding box - triplet ids association. using
+the following metrics: 
 
+- **LM: localize and match**: percentage of triplets localized at threshold (θ) and matched with correct triplet ids. 
+- **PLM: partially localize and match**: percentage of triplets matched with correct triplet ids but localization overlap is less than θ. 
+- **IDS: identity switch**: percentage of triplets localized at θ but with swapped ids within the frame. 
+- **IDS: identity miss**: percentage of triplets localized at θ but with incorrect ids (not swapped). 
+- **MIL: missed localization**: percentage of triplets matched with correct triplet ids with no matching localization bounding boxes. 
+- **RFP: remaining false positive**: remaining false alarms after all other scores has been considered. 
+- **RFN: remaining false negative**: remaining missed predictions after all other scores has been considered.
 
+The TAS metrics are automatically computed within the Detection class of ivtmetrics. The results are accessed using the TAS metrics acronymns as keys, such as:
+
+.. code:: python
+
+   import ivtmetrics
+   detect = ivtmetrics.Detection(num_class=100)
+   """
+     after a series of detect.update() call    
+   """
+   results_ivt = detect.compute_video_AP('ivt')
+   print("triplet matched and localized", results_ivt["ml"])
+   print("triplet identity switchd", results_ivt["ids"])
+   print("triplet missed localization", results_ivt["mil"])
+
+ 
 Docker
 ------
 
 coming soon ..
+
 
 Citation
 --------
@@ -355,14 +370,21 @@ Citation
 If you use this metrics in your project or research, please consider
 citing the associated publication:
 
+- Nwoye, C.I. and. Padoy, N. (2022) Data Splits and Metrics for Benchmarking Methods on Surgical Action Triplet Datasets. arXiv PrePrint arXiv:2204.05235.
+
+**Bibtex:**
+
 ::
 
    @article{nwoye2022data,
-      title={Data Splits and Metrics for Benchmarking Methods on Surgical Action Triplet Datasets},
-      author={Nwoye, Chinedu Innocent and Padoy, Nicolas},
-      journal={arXiv preprint arXiv:2204.05235},
-      year={2022}
+     title={Data Splits and Metrics for Benchmarking Methods on Surgical Action Triplet Datasets},
+     author={Nwoye, Chinedu Innocent and Padoy, Nicolas},
+     journal={arXiv preprint arXiv:2204.05235},
+     year={2022}
    }
+
+
+
 
 References
 ----------
@@ -377,8 +399,8 @@ References
    triplets. In International Conference on Medical Image Computing and
    Computer-Assisted Intervention (pp. 364-374). Springer, Cham.
 3. http://camma.u-strasbg.fr/datasets
-4. https://cholectriplet2021.grand-challenge.org
-5. https://cholectriplet2022.grand-challenge.org
+4. https://cholectriplet2022.grand-challenge.org
+5. https://cholectriplet2021.grand-challenge.org
 
 
 License
@@ -412,5 +434,5 @@ License
    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.```
 
-.. |PyPI version| image:: https://badge.fury.io/py/motmetrics.svg
-   :target: https://pypi.org/project/ivtmetrics/0.0.1/
+.. |PyPI version| image:: vertopal_6dee18b74fe94d8dbedbe791e7a0fa62/6dfb177ee0e65f025ad94cc9e1e46ad756f8e080.svg
+   :target: https://pypi.org/project/ivtmetrics/0.1.2/

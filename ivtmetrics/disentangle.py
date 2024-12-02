@@ -77,6 +77,7 @@ class Disentangle(object):
             return np.array(list(map(self.decompose, inputs, component)))
 
     def map_file(self):
+        # IVT, I, V, T, IV, IT
         return np.array([ 
                        [ 0,  0,  2,  1,  2,  1],
                        [ 1,  0,  2,  0,  2,  0],

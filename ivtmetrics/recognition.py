@@ -60,14 +60,17 @@ class Recognition(Disentangle):
         self.reset_global()   
 
     def resolve_nan(self, classwise):
-        classwise[classwise==-0.0] = np.nan
+        equiv_nan = ['-0', '-0.', '-0.0', '-.0']
+        classwise = list(map(str, classwise))
+        classwise = [np.nan if x in equiv_nan else x for x in classwise]
+        classwise = list(map(float, classwise))
         return classwise
         
     ##%%%%%%%%%%%%%%%%%%% RESET OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     def reset(self):
         "call at the beginning of new experiment or epoch to reset the accumulators for preditions and groundtruths."
-        self.predictions = np.empty(shape = [0,self.num_class], dtype=np.float)
-        self.targets     = np.empty(shape = [0,self.num_class], dtype=np.int)        
+        self.predictions = np.empty(shape = [0,self.num_class], dtype=float)
+        self.targets     = np.empty(shape = [0,self.num_class], dtype=int)        
         
     def reset_global(self):
         "call at the beginning of new experiment"
@@ -114,7 +117,7 @@ class Recognition(Disentangle):
             targets  = self.extract(self.targets, component)
             predicts = self.extract(self.predictions, component)
         else:
-            sys.exit("Function filtering {} not yet supported!".format(component))
+            raise NotImplementedError(f"Function filtering {component} not supported yet!")
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore', message='[info] triplet classes not represented in this test sample will be reported as nan values.')            
             classwise = average_precision_score(targets, predicts, average=None)
@@ -137,13 +140,7 @@ class Recognition(Disentangle):
         mean: float
             mean AP performance
         """        
-        global_targets      = self.global_targets
-        global_predictions  = self.global_predictions
-        if len(self.targets) > 0:
-            global_targets.append(self.targets)
-            global_predictions.append(self.predictions)
-        targets  = np.concatenate(global_targets, axis=0)
-        predicts = np.concatenate(global_predictions, axis=0)
+        targets, predicts = self.aggregate_global_records()
         if component in ["ivt", "it", "iv", "t", "v", "i"]:
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
@@ -170,12 +167,8 @@ class Recognition(Disentangle):
             AP performance per class for all videos
         mean: float
             mean AP performance for all videos
-        """           
-        global_targets      = self.global_targets
-        global_predictions  = self.global_predictions
-        if len(self.targets) > 0:
-            global_targets.append(self.targets)
-            global_predictions.append(self.predictions)
+        """         
+        global_targets, global_predictions = self.aggregate_global_records_partial()  
         video_log = []
         with warnings.catch_warnings():
             warnings.filterwarnings(action='ignore', message='')
@@ -211,13 +204,8 @@ class Recognition(Disentangle):
         mean: float
             mean top-k performance
         """            
-        global_targets      = self.global_targets
-        global_predictions  = self.global_predictions
-        if len(self.targets) > 0:
-            global_targets.append(self.targets)
-            global_predictions.append(self.predictions)
-        targets  = np.concatenate(global_targets, axis=0)
-        predicts = np.concatenate(global_predictions, axis=0)
+        targets, predicts = self.aggregate_global_records()
+
         if component in ["ivt", "it", "iv", "t", "v", "i"]:
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
@@ -231,7 +219,7 @@ class Recognition(Disentangle):
             correct += len(set(gt_pos).intersection(set(pd_idx)))
             total   += len(gt_pos)
         if total==0: total=1
-        return correct/total
+        return correct/float(total)
 
     def topClass(self, k=10, component="ivt"):
         """
@@ -245,13 +233,8 @@ class Recognition(Disentangle):
         mean: float
             mean top-k recognized classes
         """
-        global_targets      = self.global_targets
-        global_predictions  = self.global_predictions
-        if len(self.targets) > 0:
-            global_targets.append(self.targets)
-            global_predictions.append(self.predictions)
-        targets  = np.concatenate(global_targets, axis=0)
-        predicts = np.concatenate(global_predictions, axis=0)
+        targets, predicts = self.aggregate_global_records()
+
         if component in ["ivt", "it", "iv", "t", "v", "i"]:
             targets  = self.extract(targets, component)
             predicts = self.extract(predicts, component)
@@ -262,3 +245,23 @@ class Recognition(Disentangle):
         pd_idx    = (-classwise).argsort()[:k]
         output    = {x:classwise[x] for x in pd_idx}
         return output
+
+
+    def aggregate_global_records(self):
+        global_targets      = self.global_targets
+        global_predictions  = self.global_predictions
+        if len(self.targets) > 0:
+            global_targets.append(self.targets)
+            global_predictions.append(self.predictions)
+        targets  = np.concatenate(global_targets, axis=0)
+        predicts = np.concatenate(global_predictions, axis=0)
+        return targets, predicts
+    
+    
+    def aggregate_global_records_partial(self):
+        global_targets      = self.global_targets
+        global_predictions  = self.global_predictions
+        if len(self.targets) > 0:
+            global_targets.append(self.targets)
+            global_predictions.append(self.predictions)
+        return global_targets, global_predictions

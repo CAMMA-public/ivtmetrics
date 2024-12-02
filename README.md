@@ -139,9 +139,7 @@ This takes an argument `num_class` which is default to `100` and `num_tool` whic
 The following function are possible with the `Detection` class:
 
 Name | Description
-
-:--- | :---
-
+:--- | :--- 
 update(`targets, predictions, format`)|input: takes in a (batch of) list/dict predictions and their corresponding groundtruth. Each frame prediction/groundtruth can be either as a `list of list` or `list of dict`. (more details below).
 video_end()|Call to make the end of one video sequence.
 reset()|Reset current records. Useful during training and can be called at the begining of each epoch to avoid overlapping epoch performances.
@@ -236,7 +234,32 @@ it_labels = filter.extract(inputs=ivt_labels, component="it")
 
 
 
+### Triplet Association Scores (TAS)
 
+This assesses the quality of bounding box - triplet ids association. using the following metrics:
+- **LM: localize and match percent**: percentage of triplets localized at threshold (θ) and matched with correct triplet ids.
+- **PLM: partially localize and match**: percentage of triplets matched with correct triplet ids but localization overlap is less than θ.
+- **IDS: identity switch**: percentage of triplets localized at θ but with swapped ids within the frame.
+- **IDS: identity miss**: percentage of triplets localized at θ but with incorrect ids (not swapped).
+- **MIL: missed localization**: percentage of triplets matched with correct triplet ids with no matching localization bounding boxes.
+- **FP: remaining false positives**: remaining false alarms after all other scores has been considered.
+- **FN: remaining false negatives**: remaining missed predictions after all other scores has been considered.
+
+The TAS metrics are automatically computed within the Detection class of ivtmetrics.
+The results are accessed using the TAS metrics acronymns as keys, such as:
+
+
+``` python
+import ivtmetrics
+detect = ivtmetrics.Detection(num_class=100)
+"""
+  after a series of detect.update() call    
+"""
+results_ivt = detect.compute_video_AP('ivt')
+print("triplet matched and localized", results_ivt["ml"])
+print("triplet identity switchd", results_ivt["ids"])
+print("triplet missed localization", results_ivt["mil"])
+```
 
 <a name="Docker"></a>
 ## Docker
