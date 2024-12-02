@@ -71,7 +71,7 @@ class Recognition(Disentangle):
         "call at the beginning of new experiment or epoch to reset the accumulators for preditions and groundtruths."
         self.predictions = np.empty(shape = [0,self.num_class], dtype=float)
         self.targets     = np.empty(shape = [0,self.num_class], dtype=int)        
-        
+
     def reset_global(self):
         "call at the beginning of new experiment"
         self.global_predictions = []
