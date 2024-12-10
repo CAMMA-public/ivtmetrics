@@ -2,20 +2,21 @@ from distutils.core import setup
 
 from pathlib import Path
 this_directory = Path(__file__).parent
-long_description = (this_directory / "README.rst").read_text(encoding="utf-8")
+long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name='ivtmetrics',
-    version='0.1.3',    
+    version='0.1.4',    
     packages=['ivtmetrics'],
     author='Chinedu Nwoye',
     author_email='nwoye.chinedu@gmail.com',    
     description='A Python evaluation metrics package for action triplet recognition',
     keywords = ['triplet', 'average precision', 'AP', 'mAP'], 
     long_description = long_description,
-    long_description_content_type ='text/x-rst',
+    # long_description_content_type ='text/x-rst',
+    long_description_content_type ='text/markdown',
     url='https://github.com/CAMMA-public/ivtmetrics',
-    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.1.3.tar.gz', 
+    download_url = 'https://github.com/CAMMA-public/ivtmetrics/archive/refs/tags/v0.1.4.tar.gz', 
     include_package_data=True,
     license='BSD 2-clause', # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     install_requires=['scikit-learn>=1.0.2',

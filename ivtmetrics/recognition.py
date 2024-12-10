@@ -63,7 +63,7 @@ class Recognition(Disentangle):
         equiv_nan = ['-0', '-0.', '-0.0', '-.0']
         classwise = list(map(str, classwise))
         classwise = [np.nan if x in equiv_nan else x for x in classwise]
-        classwise = list(map(float, classwise))
+        classwise = np.array(list(map(float, classwise)))
         return classwise
         
     ##%%%%%%%%%%%%%%%%%%% RESET OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
