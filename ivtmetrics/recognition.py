@@ -60,10 +60,7 @@ class Recognition(Disentangle):
         self.reset_global()   
 
     def resolve_nan(self, classwise):
-        equiv_nan = ['-0', '-0.', '-0.0', '-.0']
-        classwise = list(map(str, classwise))
-        classwise = [np.nan if x in equiv_nan else x for x in classwise]
-        classwise = np.array(list(map(float, classwise)))
+        classwise[classwise==-0.0] = np.nan
         return classwise
         
     ##%%%%%%%%%%%%%%%%%%% RESET OP #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
